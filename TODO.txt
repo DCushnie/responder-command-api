@@ -1,0 +1,7 @@
+My List
+
+- create a database to store my information
+	-> this should include:
+		UserTable: id,username,password,role
+		IncidentTable:id, title, description, location, priority, status, created by, creat at, updated at, resolved at
+
