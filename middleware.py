@@ -1,10 +1,5 @@
 import time
-from fastapi import FastAPI, Request
+from fastapi import Depends,HTTPException
+from jose import JWTError,jwt
 
-
-app = FastAPI()
-
-
-@app.middleware("http")
-def authentication(req: Request, call_next):
-    print(req.cookies)
+# def authenticate(token: str = Depends(oauth2_scheme))

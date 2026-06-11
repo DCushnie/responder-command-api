@@ -8,6 +8,8 @@ import psycopg2 as pg
 from psycopg2.errors import UniqueViolation
 from fastapi import HTTPException
 from passlib.hash import bcrypt
+from authHandler import create_access_token
+
 
 
 load_dotenv()
@@ -24,18 +26,25 @@ except:
 
 cursor = conn.cursor()
 
-# def check_User(username,passwrd):
-#     user_info = get_SpecificUser(username)
-#     user_pass = user_info[2]
+def check_User(username,passwrd):
 
-#     entered_pass_byte = passwrd.encode('utf-8')
-#     salt = gensalt(10)
-#     hash = hashpw(entered_pass_byte,salt)
+    try:
+        user_info = get_SpecificUser(username)
+        user_pass = user_info[2]
+    except:
+        raise HTTPException(304, detail="User does not exist")
 
-#     result = checkpw(entered_pass_byte,hash)
+    result = bcrypt.verify(passwrd,user_pass)
 
-#     print(user_pass)
-#     print(result)
+    if result == True:
+        token = create_access_token({
+        "sub":str(user_info[0]),
+        "role": user_info[3]
+        })
+    else:
+        raise HTTPException(304,detail="not authorised")
+
+    return token
 
     
 
@@ -85,8 +94,6 @@ def create_User(usrnm,passwrd,rl):
     conn.commit()
     
     data = get_SpecificUser(usrnm)
-
-    print(data)
     
 
 def delete_User(userid,usrnm):
@@ -107,6 +114,3 @@ def delete_User(userid,usrnm):
         print("Error: Failed to delete user")
     else:
         print("✅ succesfully Deleted User")
-
-
-get_SpecificUser('Thor')
