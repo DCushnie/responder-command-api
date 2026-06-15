@@ -5,3 +5,5 @@ My List
 		UserTable: id,username,password,role
 		IncidentTable:id, title, description, location, priority, status, created by, creat at, updated at, resolved at
 
+- manage access to endpoints via user role
+
